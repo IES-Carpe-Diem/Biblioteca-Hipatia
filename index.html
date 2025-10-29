@@ -1,0 +1,2118 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>IES CARPE DIEM - Biblioteca Hipatia 🦉</title>
+        <link rel="icon" href="https://site.educa.madrid.org/ies.carpediem.fuenlabrada//wp-content/uploads/ies.carpediem.fuenlabrada/2023/03/logo-carpe-diem-cuadrado-500x500-blanco-100x100.png" sizes="32x32" />
+        <link rel="icon" href="https://site.educa.madrid.org/ies.carpediem.fuenlabrada//wp-content/uploads/ies.carpediem.fuenlabrada/2023/03/logo-carpe-diem-cuadrado-500x500-blanco-300x300.png" sizes="192x192" />
+        <link rel="apple-touch-icon" href="https://site.educa.madrid.org/ies.carpediem.fuenlabrada//wp-content/uploads/ies.carpediem.fuenlabrada/2023/03/logo-carpe-diem-cuadrado-500x500-blanco-300x300.png" />
+        <meta name="msapplication-TileImage" content="https://site.educa.madrid.org/ies.carpediem.fuenlabrada//wp-content/uploads/ies.carpediem.fuenlabrada/2023/03/logo-carpe-diem-cuadrado-500x500-blanco-300x300.png" />
+        <link rel="preload" href="./Ejemplares.xml" as="fetch" crossorigin="anonymous">
+        <link rel="preload" href="https://raw.githubusercontent.com/Kelonio-hub/prueba/main/logo%20biblioteca.png" as="image">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.3.10/purify.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.0.18/marked.min.js"></script>
+        <style>
+            :root {
+                --bg-primary: #f4f4f4;
+                --bg-secondary: white;
+                --text-primary: #333;
+                --text-secondary: #666;
+                --border-color: #ddd;
+                --btn-primary: #1a73e8;
+                --btn-hover: #1a73e8;
+                --btn-reserva: #2a2a2a;
+                --btn-reserva-hover: #2a2a2a;
+                --btn-solicitud: #2a2a2a;
+                --btn-solicitud-hover: #2a2a2a;
+                --btn-donaciones: #2a2a2a;
+                --btn-donaciones-hover: #2a2a2a;
+                --btn-reseña: #2a2a2a;
+                --btn-reseña-hover: #2a2a2a;
+                --shadow: 0 2px 5px rgba(0,0,0,0.1);
+                --chat-bg: #f9f9f9;
+                --user-msg-bg: #c9c9c9;
+                --bot-msg-bg: #c9c9c9;
+                --bot-msg-color: #000000;
+                --splash-bg: linear-gradient(135deg, rgb(255, 255, 255) 0%, #c8c8c8 50%, #ffffff 100%);
+                --splash-text: rgb(0, 0, 0);
+                --splash-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+                --btn-proseguir: #17a2b8;
+                --btn-proseguir-hover: #138496;
+                --btn-buscar-libro: #3399ff;
+                --btn-buscar-libro-hover: #1a73e8;
+                --btn-sinopsis: #28a745;
+                --btn-sinopsis-hover: #218838;
+            }
+            [data-theme="dark"] {
+                --bg-primary: #1a1a1a;
+                --bg-secondary: #2d2d2d;
+                --text-primary: #ffffff;
+                --text-secondary: #ffffff;
+                --border-color: #666;
+                --btn-primary: #1a73e8;
+                --btn-hover: #1a73e8;
+                --btn-reserva: #2a2a2a;
+                --btn-reserva-hover: #2a2a2a;
+                --btn-solicitud: #2a2a2a;
+                --btn-solicitud-hover: #2a2a2a;
+                --btn-donaciones: #2a2a2a;
+                --btn-donaciones-hover: #2a2a2a;
+                --btn-reseña: #2a2a2a;
+                --btn-reseña-hover: #2a2a2a;
+                --shadow: 0 2px 5px rgba(0,0,0,0.3);
+                --chat-bg: #374151;
+                --user-msg-bg: #3a3a3a;
+                --bot-msg-bg: #3a3a3a;
+                --bot-msg-color: #e0e0e0;
+                --splash-bg: linear-gradient(135deg, #374151 0%, #374151 50%, #374151 100%);
+                --splash-text: rgb(255, 255, 255);
+                --splash-shadow: 2px 2px 4px rgba(255, 255, 255, 0.2);
+                --btn-proseguir: #17a2b8;
+                --btn-proseguir-hover: #138496;
+                --btn-buscar-libro: #1a73e8;
+                --btn-buscar-libro-hover: #1a73e8;
+                --btn-sinopsis: #28a745;
+                --btn-sinopsis-hover: #218838;
+            }
+
+            /* === MODOS DALTONISMO === */
+            [data-daltonism="normal"] { filter: none; }
+            [data-daltonism="deuteranomaly"] { 
+                filter: brightness(1.1) contrast(1.2) hue-rotate(30deg); 
+            }
+            [data-daltonism="protanomaly"] { 
+                filter: brightness(1.1) contrast(1.2) sepia(0.3) hue-rotate(-30deg); 
+            }
+            [data-daltonism="tritanomaly"] { 
+                filter: brightness(1.15) contrast(1.3) hue-rotate(180deg) saturate(1.4); 
+            }
+
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 20px;
+                background-color: var(--bg-primary);
+                color: var(--text-primary);
+                transition: background-color 0.3s, color 0.3s;
+            }
+            #splash {
+                position: fixed;
+                top: 0; left: 0;
+                width: 100%; height: 100%;
+                background: var(--splash-bg);
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                z-index: 9999;
+                transition: opacity 0.5s ease-out;
+                color: var(--splash-text);
+                font-family: 'Arial', sans-serif;
+                text-align: center;
+                overflow: hidden;
+                text-shadow: var(--splash-shadow);
+                filter: inherit;
+            }
+            #splash.hidden { opacity: 0; pointer-events: none; }
+
+            .splash-container {
+                animation: fadeInContainer 1.5s ease-out;
+            }
+            #splash img {
+                max-width: 250px;
+                height: auto;
+                margin-bottom: 20px;
+                border-radius: 12px;
+                animation: bounceIn 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.5s both;
+                transition: transform 0.3s ease;
+            }
+            #splash img:hover {
+                transform: scale(1.05);
+            }
+            #splash h2 {
+                font-size: 2.8rem;
+                margin: 15px 0;
+                font-weight: bold;
+                animation: fadeInUp 0.8s ease-out 1s both;
+                letter-spacing: 1px;
+            }
+            #splash p {
+                font-size: 1.3rem;
+                opacity: 0.95;
+                margin-bottom: 20px;
+                animation: fadeInUp 0.8s ease-out 1.2s both;
+            }
+            @keyframes fadeInContainer {
+                from { opacity: 0; }
+                to { opacity: 1; }
+            }
+            @keyframes bounceIn {
+                0% { opacity: 0; transform: scale(0.3); }
+                50% { opacity: 1; transform: scale(1.05); }
+                70% { transform: scale(0.9); }
+                100% { opacity: 1; transform: scale(1); }
+            }
+            @keyframes fadeInUp {
+                from { opacity: 0; transform: translateY(30px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            #app {
+                display: none;
+            }
+            header {
+                text-align: center;
+                background-image: url('https://site.educa.madrid.org/ies.carpediem.fuenlabrada//wp-content/uploads/ies.carpediem.fuenlabrada/2024/03/carpediem-foto-inicio1920x1200c.jpg');
+                background-size: cover;
+                background-position: center;
+                color: white;
+                padding: 20px;
+                border-radius: 8px;
+                text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+                position: relative;
+            }
+            .theme-controls {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                display: flex;
+                gap: 5px;
+                z-index: 1100; /* Mayor que el z-index del modal */
+            }
+            .theme-controls.active {
+                box-shadow: 0 0 10px rgba(255, 255, 255, 0.8); /* Resaltar botones */
+            }
+            .theme-toggle {
+                background: rgba(255,255,255,0.2);
+                border: none;
+                color: white;
+                padding: 5px 10px;
+                border-radius: 4px;
+                cursor: pointer;
+                transition: background-color 0.3s;
+            }
+            .theme-toggle:hover {
+                background: rgba(255,255,255,0.3);
+            }
+            [data-theme="dark"] .theme-toggle {
+                background: rgba(0,0,0,0.2);
+            }
+            [data-theme="dark"] .theme-toggle:hover {
+                background: rgba(0,0,0,0.3);
+            }
+
+            /* BOTÓN DALTONISMO */
+            .daltonism-toggle {
+                background: rgba(255,255,255,0.2);
+                border: none;
+                color: white;
+                padding: 6px;
+                border-radius: 4px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .daltonism-toggle:hover {
+                background: rgba(255,255,255,0.35);
+                transform: scale(1.1);
+            }
+            [data-theme="dark"] .daltonism-toggle {
+                background: rgba(0,0,0,0.2);
+            }
+            [data-theme="dark"] .daltonism-toggle:hover {
+                background: rgba(0,0,0,0.35);
+            }
+            .daltonism-toggle.active {
+                background: rgba(255,255,255,0.4) !important;
+                box-shadow: 0 0 8px rgba(255,255,255,0.6);
+            }
+            [data-theme="dark"] .daltonism-toggle.active {
+                background: rgba(0,0,0,0.4) !important;
+                box-shadow: 0 0 8px rgba(255,255,255,0.4);
+            }
+
+            .header-search {
+                margin-top: 10px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+            }
+            .search-container {
+                display: flex;
+                justify-content: center;
+                gap: 10px;
+                align-items: center;
+                flex-wrap: wrap;
+                width: 100%;
+                max-width: 600px;
+            }
+            .action-buttons {
+                display: flex;
+                justify-content: center;
+                gap: 10px;
+                align-items: center;
+                flex-wrap: wrap;
+                width: 100%;
+            }
+            .header-search input {
+                padding: 8px;
+                border: none;
+                border-radius: 4px;
+                width: 250px;
+                max-width: 100%;
+                background: rgba(255,255,255,0.9);
+            }
+            .header-search button {
+                padding: 8px 12px;
+                border: none;
+                border-radius: 4px;
+                color: white;
+                cursor: pointer;
+                transition: background-color 0.3s;
+            }
+            .header-search .buscar-btn {
+                background-color: var(--btn-primary);
+            }
+            .header-search .buscar-btn:hover {
+                background-color: var(--btn-hover);
+            }
+            .header-search .reserva-btn {
+                background-color: var(--btn-reserva);
+            }
+            .header-search .reserva-btn:hover {
+                background-color: var(--btn-reserva-hover);
+            }
+            .header-search .reseña-btn {
+                background-color: var(--btn-reseña);
+            }
+            .header-search .reseña-btn:hover {
+                background-color: var(--btn-reseña-hover);
+            }
+            .header-search .solicitud-btn {
+                background-color: var(--btn-solicitud);
+            }
+            .header-search .solicitud-btn:hover {
+                background-color: var(--btn-solicitud-hover);
+            }
+            .header-search .donaciones-btn {
+                background-color: var(--btn-donaciones);
+            }
+            .header-search .donaciones-btn:hover {
+                background-color: var(--btn-donaciones-hover);
+            }
+            main {
+                display: flex;
+                gap: 20px;
+                flex-wrap: wrap;
+            }
+            section {
+                flex: 1;
+                background: var(--bg-secondary);
+                padding: 20px;
+                border-radius: 8px;
+                box-shadow: var(--shadow);
+            }
+            #seccionDerecha {
+                flex: 1;
+                max-width: 800px;
+                margin: 0 auto;
+            }
+            #chatMensajes {
+                height: 200px;
+                overflow-y: scroll;
+                border: 1px solid var(--border-color);
+                padding: 10px;
+                margin: 10px 0;
+                background-color: var(--chat-bg);
+                color: var(--text-primary);
+            }
+            .mensaje {
+                margin: 5px 0;
+                padding: 5px;
+                color: var(--text-primary);
+                border-radius: 4px;
+                position: relative;
+            }
+            .mensaje.user {
+                background-color: var(--user-msg-bg);
+                text-align: right;
+            }
+            .mensaje.bot {
+                background-color: var(--bot-msg-bg);
+                color: var(--bot-msg-color);
+            }
+            .mensaje.temporal {
+                font-style: italic;
+                color: #888;
+                opacity: 0.7;
+            }
+            .proseguir-btn, .buscar-libro-btn, .reserva-libro-btn, .solicitud-libro-btn, .sinopsis-btn {
+                border: none;
+                padding: 5px 10px;
+                border-radius: 4px;
+                cursor: pointer;
+                margin-top: 5px;
+                margin-right: 5px;
+                display: inline-block;
+                transition: background-color 0.3s;
+            }
+            .proseguir-btn {
+                background-color: var(--btn-proseguir);
+                color: white;
+            }
+            .proseguir-btn:hover {
+                background-color: var(--btn-proseguir-hover);
+            }
+            .buscar-libro-btn {
+                background-color: var(--btn-buscar-libro);
+                color: white;
+            }
+            .buscar-libro-btn:hover {
+                background-color: var(--btn-buscar-libro-hover);
+            }
+            .reserva-libro-btn {
+                background-color: var(--btn-reserva);
+                color: white;
+            }
+            .reserva-libro-btn:hover {
+                background-color: var(--btn-reserva-hover);
+            }
+            .solicitud-libro-btn {
+                background-color: var(--btn-solicitud);
+                color: white;
+            }
+            .solicitud-libro-btn:hover {
+                background-color: var(--btn-solicitud-hover);
+            }
+            .sinopsis-btn {
+                background-color: var(--btn-sinopsis);
+                color: white;
+            }
+            .sinopsis-btn:hover {
+                background-color: var(--btn-sinopsis-hover);
+            }
+            .chat-controls {
+                display: flex;
+                gap: 10px;
+                align-items: center;
+            }
+            .chat-controls input {
+                flex: 1;
+                padding: 10px;
+                border: 1px solid var(--border-color);
+                border-radius: 4px;
+                background: var(--bg-secondary);
+                color: var(--text-primary);
+            }
+            .chat-controls input::placeholder {
+                color: var(--text-secondary);
+                opacity: 0.7;
+            }
+            .chat-controls button {
+                padding: 8px 12px;
+                border: none;
+                border-radius: 4px;
+                background-color: var(--btn-primary);
+                color: white;
+                cursor: pointer;
+            }
+            .chat-controls button:hover {
+                background-color: var(--btn-hover);
+            }
+            #searchModal {
+                display: none;
+                position: fixed;
+                z-index: 1000;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                overflow: auto;
+                background-color: rgba(0,0,0,0.4);
+                pointer-events: none; /* Fondo del modal no captura clics */
+            }
+            #searchModalContent {
+                background-color: var(--bg-secondary);
+                margin: 5% auto;
+                padding: 20px;
+                border: none;
+                border-radius: 8px;
+                width: 90%;
+                max-width: 600px;
+                max-height: 80vh;
+                overflow-y: auto;
+                box-shadow: var(--shadow);
+                color: var(--text-primary);
+                box-sizing: border-box;
+                position: relative;
+                pointer-events: auto; /* Solo el contenido del modal captura eventos */
+            }
+            .modal-close {
+                color: var(--text-secondary);
+                float: right;
+                font-size: 28px;
+                font-weight: bold;
+                cursor: pointer;
+                pointer-events: auto; /* Botón de cerrar captura eventos */
+            }
+            .modal-close:hover {
+                color: var(--text-primary);
+            }
+            .modal-search {
+                display: flex;
+                gap: 10px;
+                margin-bottom: 15px;
+            }
+            .modal-search input {
+                flex: 1;
+                padding: 8px;
+                border: 1px solid var(--border-color);
+                border-radius: 4px;
+                background: var(--bg-secondary);
+                color: var(--text-primary);
+            }
+            .modal-search button {
+                padding: 8px 12px;
+                border: none;
+                border-radius: 4px;
+                background-color: var(--btn-primary);
+                color: white;
+                cursor: pointer;
+            }
+            .modal-search button:hover {
+                background-color: var(--btn-hover);
+            }
+            .libro-modal {
+                border: 1px solid var(--border-color);
+                padding: 0;
+                margin: 10px 0;
+                border-radius: 4px;
+                background: var(--bg-secondary);
+                overflow: hidden;
+            }
+            .contenido-modal {
+                padding: 15px;
+                line-height: 1.6;
+            }
+            .contenido-modal p {
+                margin: 8px 0;
+            }
+            .libro-modal img {
+                max-width: 100px;
+                height: auto;
+                border-radius: 4px;
+                margin-bottom: 10px;
+                box-shadow: var(--shadow);
+            }
+            .tejuelo {
+                font-family: monospace;
+                padding: 2px 4px;
+                border-radius: 2px;
+                color: black;
+            }
+            .tejuelo[data-categoria="narrativa"] {
+                background-color: #1bd47a;
+            }
+            .tejuelo[data-categoria="poesía"] {
+                background-color: #ff48a9;
+            }
+            .tejuelo[data-categoria="teatro"] {
+                background-color: #e350de;
+            }
+            .tejuelo[data-categoria="literatura inglesa"] {
+                background-color: #d4d700;
+            }
+            .tejuelo[data-categoria="enciclopedias"] {
+                background-color: #ffaa00;
+            }
+            .tejuelo[data-categoria="cómic"] {
+                background-color: #33c5ff;
+            }
+            .tejuelo[data-categoria="deportes"] {
+                background-color: #ff0000;
+            }
+            .tejuelo:not([data-categoria]),
+            .tejuelo[data-categoria="no disponible"] {
+                background-color: #cccccc;
+            }
+            .pagination {
+                text-align: center;
+                margin: 10px 0;
+            }
+            .pagination button {
+                background-color: var(--btn-primary);
+                color: white;
+                border: none;
+                padding: 5px 10px;
+                margin: 0 5px;
+                cursor: pointer;
+                border-radius: 4px;
+            }
+            .pagination button:disabled {
+                background-color: var(--border-color);
+                color: #ffffff;
+                cursor: not-allowed;
+                opacity: 0.7;
+            }
+            .pagination span {
+                font-weight: bold;
+            }
+            #conteoResultadosModal {
+                font-weight: bold;
+                color: var(--btn-primary);
+                margin-bottom: 10px;
+                padding: 5px;
+                background-color: #e9f5ff;
+                border-radius: 4px;
+            }
+            .toast {
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                background: #28a745;
+                color: white;
+                padding: 15px;
+                border-radius: 4px;
+                box-shadow: var(--shadow);
+                z-index: 10000;
+                min-width: 300px;
+                animation: slideInRight 0.3s ease-out;
+                role: alert;
+            }
+            .toast.error {
+                background: #dc3545;
+            }
+            .toast.warning {
+                background: #ffc107;
+                color: black;
+            }
+            @keyframes slideInRight {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            .visually-hidden {
+                position: absolute;
+                width: 1px;
+                height: 1px;
+                padding: 0;
+                margin: -1px;
+                overflow: hidden;
+                clip: rect(0, 0, 0, 0);
+                border: 0;
+            }
+
+            /* Estilos para formularios de admin */
+            .admin-login-container, .upload-cover-container, .delete-cover-container {
+                display: none;
+                padding: 10px;
+                background: var(--bg-secondary);
+                border: 1px solid var(--border-color);
+                border-radius: 4px;
+                margin-top: 10px;
+            }
+            .admin-login-container.active, .upload-cover-container.active, .delete-cover-container.active {
+                display: block;
+            }
+            .admin-login-container input, .upload-cover-container input, .delete-cover-container select {
+                width: 100%;
+                padding: 8px;
+                margin: 5px 0;
+                border: 1px solid var(--border-color);
+                border-radius: 4px;
+            }
+            .delete-cover-btn {
+                background-color: #dc3545;
+                color: white;
+                border: none;
+                padding: 5px 10px;
+                border-radius: 4px;
+                cursor: pointer;
+                margin-top: 5px;
+                margin-left: 5px;
+                display: inline-block;
+                transition: background-color 0.3s;
+            }
+            .delete-cover-btn:hover {
+                background-color: #c82333;
+            }
+
+            @media (max-width: 768px) {
+                main {
+                    flex-direction: column;
+                }
+                #seccionDerecha {
+                    flex: none;
+                    max-width: none;
+                }
+                #splash h2 { font-size: 2rem; }
+                #splash p { font-size: 1.1rem; }
+                #splash img { max-width: 180px; }
+                .search-container, .action-buttons {
+                    flex-direction: column;
+                    align-items: center;
+                }
+                .header-search input,
+                .header-search button {
+                    width: 100%;
+                    max-width: 300px;
+                }
+                #searchModalContent {
+                    width: 95%;
+                    margin: 10% auto;
+                    padding: 15px;
+                }
+                .toast {
+                    bottom: 10px;
+                    right: 10px;
+                    left: 10px;
+                    min-width: auto;
+                }
+                .theme-controls {
+                    flex-direction: column;
+                    gap: 2px;
+                }
+                .chat-controls {
+                    flex-direction: column;
+                }
+                .libro-modal img {
+                    max-width: 80px;
+                }
+            }
+            @media (prefers-reduced-motion: reduce) {
+                #splash img, #splash h2, #splash p {
+                    animation: none !important;
+                    transition: none !important;
+                }
+            }
+
+            /* Portadas seguras (nuevo) */
+            .portada-container {
+                margin-bottom: 10px;
+                position: relative; /* Para spinner */
+            }
+            .portada-container::after {
+                content: 'Cargando portada...';
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                font-size: 0.8em;
+                color: var(--text-secondary);
+                z-index: 1;
+            }
+            .portada-container.loaded::after {
+                display: none;
+            }
+            .portada-slider-3d {
+    width: 120px;
+    height: 180px;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.6s ease;
+}
+
+.portada-img-3d {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    backface-visibility: hidden;
+    border-radius: 6px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    opacity: 0.9;
+}
+
+.portada-img-3d.active {
+    opacity: 1;
+    transform: translateZ(60px);
+    z-index: 10;
+}
+        </style>
+</head>
+<body data-theme="light" data-daltonism="normal">
+        <div id="splash" tabindex="0">
+            <div class="splash-container">
+                <img src="https://raw.githubusercontent.com/Kelonio-hub/prueba/main/logo%20biblioteca.png"
+                    alt="Logo de la Biblioteca Hipatia"
+                    loading="lazy"
+                    onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjY2NjIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkxvZ28gTm8gQ2FycmVnYWRvPC90ZXh0Pjwvc3ZnPg=='">
+                <h2>¡Bienvenidos a la Biblioteca Hipatia!</h2>
+                <p>Cargando el catálogo de libros y aventuras...</p>
+            </div>
+        </div>
+        <div id="app">
+            <header>
+                <div class="theme-controls">
+                    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Cambiar entre tema claro y oscuro">🌙</button>
+                    <button class="daltonism-toggle" onclick="toggleDaltonism()" aria-label="Activar modo para daltonismo" title="Modo accesible para daltonismo">
+                        <svg width="18" height="18" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="10" stroke-linecap="round">
+                            <circle cx="50" cy="50" r="35"/>
+                            <path d="M 15 50 H 85"/>
+                            <path d="M 50 15 V 85"/>
+                        </svg>
+                    </button>
+                    <button class="logout-btn" onclick="logoutAdmin()" aria-label="Cerrar sesión de administrador" style="display: none;">Cerrar Sesión 🔒</button>
+                </div>
+                <h1>🦉 Biblioteca Hipatia - <a href="https://site.educa.madrid.org/ies.carpediem.fuenlabrada/" target="_blank" style="color:#ffffff;"> IES CARPE DIEM</a></h1>
+                <div class="header-search">
+                    <div class="search-container">
+                        <input type="text" id="buscarInput" placeholder="Busca por título, autor, tejuelo, categoría" 
+                            aria-label="Buscar libros por título, autor, tejuelo o categoría" 
+                            aria-describedby="search-instruction" 
+                            onkeypress="if(event.key === 'Enter') mostrarResultadosBusqueda()" 
+                            list="sugerenciasBusqueda">                
+                        <datalist id="sugerenciasBusqueda"></datalist>
+                        <button class="buscar-btn" onclick="mostrarResultadosBusqueda()" aria-label="Buscar libros en el catálogo">Buscar 🔍</button>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="reserva-btn" onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSeTUAdMIEZz0lP2qflcZgfIP2zhsU4sYJoQZYoJcmvUZRAQnw/viewform?usp=header', '_blank')" 
+                                aria-label="Abrir formulario de reserva de libros">Reserva de Libros 📚</button>
+                        <button class="reseña-btn" onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLScbwLhvODSn6s5oP_GOdVhtUtojdiDUOBe5O2pJexUW5VT-Fw/viewform?usp=header', '_blank')" 
+                                aria-label="Abrir formulario de reseñas de libros">Reseña de Libros ✍️</button>
+                        <button class="solicitud-btn" onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSf_VH-Wmf7SC7geWNwoLhX1aqc_xy1LQ-fp-SFYdlOYIbTE-g/viewform?usp=header', '_blank')" 
+                                aria-label="Abrir formulario de solicitud de libros nuevos">Solicitud de Libros 🗳️</button>
+                        <button class="donaciones-btn" onclick="window.open('https://forms.gle/GobAksYs7vpXY8HG6', '_blank')" 
+                                aria-label="Abrir formulario de donaciones de libros">Donación de Libros 📦</button>
+                    </div>
+                </div>
+                <p id="search-instruction" class="visually-hidden">Busca libros por título, autor, tejuelo o categoría en la barra de búsqueda en la barra de búsqueda.</p>
+            </header>
+            <main>
+                <section id="seccionDerecha">
+                    <h2>Hipat-IA</h2>
+                    <p>¡Tu Bibliotecaria Virtual! 👩‍💼</p>
+                    <div id="chatMensajes" role="log" aria-live="polite"></div>
+                    <div class="chat-controls">
+                        <input type="text" id="chatInput" placeholder="Libros, sinopsis, recomendaciones..." 
+                            aria-label="Enviar mensaje a la bibliotecaria virtual" 
+                            aria-describedby="chat-instruction" 
+                            onkeypress="if(event.key === 'Enter') enviarMensaje()">                    
+                        <button onclick="enviarMensaje()" aria-label="Enviar mensaje al chatbot">Enviar 💬</button>
+                    </div>
+                    <p id="chat-instruction" class="visually-hidden">Envía un mensaje a la bibliotecaria virtual para obtener ayuda con libros o recomendaciones.</p>
+                </section>
+            </main>
+            <div id="searchModal" tabindex="0">
+                <div id="searchModalContent">
+                    <span class="modal-close" role="button" aria-label="Cerrar ventana de resultados de búsqueda" onclick="cerrarModal()">×</span>
+                    <h3>Resultados de Búsqueda</h3>
+                    <div class="modal-search">
+                        <input type="text" id="modalSearchInput" placeholder="Busca por título, autor, tejuelo, categoría" 
+                            aria-label="Buscar libros en el modal por título, autor, tejuelo o categoría" 
+                            onkeypress="if(event.key === 'Enter') buscarEnModal()">
+                        <button onclick="buscarEnModal()" aria-label="Buscar libros en el catálogo">Buscar 🔍</button>
+                    </div>
+                    <div id="conteoResultadosModal"></div>
+                    <div id="resultadosModal"></div>
+                    <div id="searchPagination" class="pagination"></div>
+                </div>
+            </div>
+        </div>
+        <script>
+            let catalogo = [];
+            let searchResults = [];
+            let searchQuery = '';
+            let currentPageSearch = 1;
+            let toastCount = 0;
+            let respuestasPendientes = {};
+            let mensajeActualId = 0;
+            let historialMensajes = [];
+            let cacheRespuestas = JSON.parse(localStorage.getItem('hipatia_cache')) || {};
+        // Credenciales de admin (cambiar en producción)
+        const ADMIN_USER = "admin";
+        const ADMIN_PASS = "hipatia2025";
+
+            const API_KEY = 'AIzaSyCls5FtXaTdzQfM5FarqmHSALeGmnIPcAg'; // Mover al backend en producción
+            const BASE_URL = 'https://generativelanguage.googleapis.com/v1beta/models/';
+            const MODELOS_A_PROBAR = [
+                'gemini-2.5-flash',
+                'gemini-2.5-pro',
+                'gemini-2.0-flash',
+                'gemini-1.5-flash-latest',
+                'gemini-1.5-pro-latest'
+            ];
+            let MODELO_FUNCIONAL = localStorage.getItem('gemini_modelo_funcional') || null;
+
+        // Token de GitHub (INSEGURO, solo para pruebas)
+        const GITHUB_API_URL = 'https://api.github.com/repos/IES-Carpe-Diem/Biblioteca-Hipatia/contents/portadas/';
+
+        function sanitizeHTML(str) {
+            return DOMPurify.sanitize(str);
+        }
+
+        function showToast(message, type = 'success') {
+            const toastContainer = document.createElement('div');
+            toastContainer.className = `toast ${type}`;
+            toastContainer.style.position = 'fixed';
+            toastContainer.style.bottom = `${20 + (toastCount * 60)}px`;
+            toastContainer.style.right = '20px';
+            toastContainer.style.padding = '15px';
+            toastContainer.style.borderRadius = '4px';
+            toastContainer.style.boxShadow = 'var(--shadow)';
+            toastContainer.style.zIndex = 10000 + toastCount;
+            toastContainer.style.minWidth = '300px';
+            toastContainer.style.animation = 'slideInRight 0.3s ease-out';
+            toastContainer.setAttribute('role', 'alert');
+            toastContainer.textContent = message;
+            document.body.appendChild(toastContainer);
+            toastCount++;
+            setTimeout(() => {
+                toastContainer.remove();
+                toastCount--;
+            }, 3000);
+        }
+
+        // === TEMA CLARO/OSCURO ===
+        function toggleTheme() {
+            const body = document.body;
+            const isDark = body.getAttribute('data-theme') === 'dark';
+            const newTheme = isDark ? 'light' : 'dark';
+            body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            showToast(isDark ? 'Modo claro activado' : 'Modo oscuro activado', 'success');
+        }
+
+        function loadTheme() {
+            const saved = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const defaultTheme = saved || (prefersDark ? 'dark' : 'light');
+            document.body.setAttribute('data-theme', defaultTheme);
+        }
+
+        // === DALTONISMO ===
+        function toggleDaltonism() {
+            const body = document.body;
+            const current = body.getAttribute('data-daltonism') || 'normal';
+            let newMode = 'normal';
+            if (current === 'normal') newMode = 'deuteranomaly';
+            else if (current === 'deuteranomaly') newMode = 'protanomaly';
+            else if (current === 'protanomaly') newMode = 'tritanomaly';
+            else if (current === 'tritanomaly') newMode = 'normal';
+
+            body.setAttribute('data-daltonism', newMode);
+            localStorage.setItem('daltonism-mode', newMode);
+
+            const btn = document.querySelector('.daltonism-toggle');
+            btn.classList.toggle('active', newMode !== 'normal');
+
+            const labels = {
+                normal: 'Modo normal',
+                deuteranomaly: 'Deuteranomalía (verde-rojo)',
+                protanomaly: 'Protanomalía (rojo-verde)',
+                tritanomaly: 'Tritanomalía (azul-amarillo)'
+            };
+            showToast(`Daltonismo: ${labels[newMode]}`, 'success');
+        }
+
+        function loadDaltonismMode() {
+            const saved = localStorage.getItem('daltonism-mode') || 'normal';
+            document.body.setAttribute('data-daltonism', saved);
+            if (saved !== 'normal') {
+                document.querySelector('.daltonism-toggle').classList.add('active');
+            }
+        }
+
+        function cerrarModal() {
+            document.getElementById('searchModal').style.display = 'none';
+            document.getElementById('buscarInput').focus();
+            document.getElementById('modalSearchInput').value = '';
+            document.querySelector('.theme-controls').classList.remove('active'); // Remover resaltado
+        }
+
+        async function cargarCatalogo() {
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 10000);
+                const cacheVersion = 'catalog-v1';
+                const cachedCatalogo = localStorage.getItem('catalogo');
+                const cachedVersion = localStorage.getItem('catalogoVersion');
+                const cachedTimestamp = localStorage.getItem('catalogoTimestamp');
+                const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+
+                // Check if cache is valid (correct version and not expired)
+                if (cachedCatalogo && cachedVersion === cacheVersion && cachedTimestamp) {
+                    const timestamp = parseInt(cachedTimestamp, 10);
+                    if (Date.now() - timestamp < CACHE_DURATION) {
+                        catalogo = JSON.parse(cachedCatalogo);
+                        actualizarSugerenciasBusqueda();
+                        return;
+                    }
+                }
+                const response = await fetch('./Ejemplares.xml', { signal: controller.signal });
+                clearTimeout(timeoutId);
+                if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
+                const xmlText = await response.text();
+                const parser = new DOMParser();
+                const xmlDoc = parser.parseFromString(xmlText, 'text/xml');
+                if (xmlDoc.getElementsByTagName('parsererror').length > 0) {
+                    throw new Error('Error al parsear XML.');
+                }
+                const libros = {};
+                Array.from(xmlDoc.getElementsByTagName('Libro')).forEach(libro => {
+                    const idDocumento = libro.getAttribute('id_documento') || '';
+                    const descriptor = libro.getElementsByTagName('Descriptor')[0];
+                    const rawCategoria = descriptor ? descriptor.textContent : 'No disponible';
+                    const categoriaMap = {
+                        'narrativa': 'Narrativa',
+                        'poesia': 'Poesía',
+                        'poesía': 'Poesía',
+                        'teatro': 'Teatro',
+                        'literatura inglesa': 'Literatura inglesa',
+                        'enciclopedias': 'Enciclopedias',
+                        'comic': 'Cómic',
+                        'cómic': 'Cómic',
+                        'deportes': 'Deportes'
+                    };
+                    const categoria = categoriaMap[rawCategoria.toLowerCase()] || rawCategoria;
+                    libros[idDocumento] = {
+                        titulo: libro.getElementsByTagName('Titulo')[0]?.textContent || 'Sin título',
+                        autor: libro.getElementsByTagName('Autor')[0]?.textContent || 'Desconocido',
+                        categoria: categoria,
+                        fechaEdicion: libro.getElementsByTagName('FechaEdicion')[0]?.textContent || 'No disponible'
+                    };
+                });
+
+                const librosAgrupados = {};
+                Array.from(xmlDoc.getElementsByTagName('Ejemplar')).forEach(ejemplar => {
+                    const idRegistro = ejemplar.getAttribute('IdRegistro') || '';
+                    const libro = libros[idRegistro] || {};
+                    let signatura1 = ejemplar.getAttribute('Signatura1') || '';
+                    const signaturaMap = {
+                        'Narrativa': 'N',
+                        'Poesía': 'P',
+                        'Teatro': 'T',
+                        'Literatura inglesa': 'LI',
+                        'Enciclopedias': 'E',
+                        'Cómic': 'C',
+                        'Deportes': 'D'
+                    };
+                    signatura1 = signaturaMap[libro.categoria] || signatura1 || '';
+                    const signatura = `${signatura1}-${ejemplar.getAttribute('Signatura2') || ''}-${ejemplar.getAttribute('Signatura3') || ''}`.trim();
+                    
+                    const tituloNormalizado = normalizarTexto(libro.titulo || 'Sin título').replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_-]/g, '');
+                    
+                    if (!librosAgrupados[idRegistro]) {
+                        librosAgrupados[idRegistro] = {
+                            titulo: libro.titulo || 'Sin título',
+                            autor: libro.autor || 'Desconocido',
+                            categoria: libro.categoria || 'No disponible',
+                            fechaEdicion: libro.fechaEdicion || 'No disponible',
+                            signatura: signatura || 'No disponible',
+                            isbn: ejemplar.getAttribute('ISBN') || 'No disponible',
+                            fecha: ejemplar.getAttribute('Fecha') || 'No disponible',
+                            copiasTotales: 0,
+                            copiasDisponibles: 0,
+                            idRegistro: idRegistro,
+                            portadas: [] // Array para múltiples portadas
+                        };
+                        // Inicializar con portada existente, si la hay
+                        const posiblesPortadas = [
+                            `./portadas/${tituloNormalizado}.jpg`,
+                            `./portadas/${idRegistro}.jpg`
+                        ];
+                        posiblesPortadas.forEach(portada => {
+                            if (imageExists(portada)) {
+                                librosAgrupados[idRegistro].portadas.push(portada);
+                            }
+                        });
+                    }
+                    librosAgrupados[idRegistro].copiasTotales += 1;
+                    if (ejemplar.getAttribute('Estado') === '0') {
+                        librosAgrupados[idRegistro].copiasDisponibles += 1;
+                    }
+                });
+                const portadasGuardadas = JSON.parse(localStorage.getItem('portadas_libros') || '{}');
+                Object.keys(librosAgrupados).forEach(idRegistro => {
+                    const portadasPersistidas = portadasGuardadas[idRegistro] || [];
+                    portadasPersistidas.forEach(portada => {
+                        if (!librosAgrupados[idRegistro].portadas.includes(portada)) {
+                            librosAgrupados[idRegistro].portadas.push(portada);
+                        }
+                    });
+                });
+                catalogo = Object.values(librosAgrupados);
+                localStorage.setItem('catalogo', JSON.stringify(catalogo));
+                localStorage.setItem('catalogoVersion', cacheVersion);
+                localStorage.setItem('catalogoTimestamp', Date.now());
+                actualizarSugerenciasBusqueda();
+            } catch (error) {
+                console.error('Error al cargar:', error);
+                catalogo = [];
+                showToast('Catálogo en Mantenimiento, discupe las molestias.', 'error');
+            }
+        }
+
+        async function cargarPortadasDesdeGitHub() {
+            try {
+                const response = await fetch(GITHUB_API_URL, {
+                    headers: { 'Accept': 'application/vnd.github.v3+json' }
+                });
+                if (!response.ok) return;
+
+                const files = await response.json();
+                const portadasGuardadas = JSON.parse(localStorage.getItem('portadas_libros') || '{}');
+
+                files.forEach(file => {
+                    if (file.name.endsWith('.jpg') || file.name.endsWith('.jpeg') || file.name.endsWith('.png')) {
+                        const match = file.name.match(/^(.+?)_\d+\.(jpg|jpeg|png)$/);
+                        if (match) {
+                            const idLibro = match[1];
+                            const url = file.download_url;
+
+                            // Añadir al catálogo
+                            const libro = catalogo.find(l => l.idRegistro === idLibro);
+                            if (libro && !libro.portadas.includes(url)) {
+                                libro.portadas.push(url);
+                            }
+
+                            // Añadir a localStorage
+                            if (!portadasGuardadas[idLibro]) portadasGuardadas[idLibro] = [];
+                            if (!portadasGuardadas[idLibro].includes(url)) {
+                                portadasGuardadas[idLibro].push(url);
+                            }
+                        }
+                    }
+                });
+
+                localStorage.setItem('portadas_libros', JSON.stringify(portadasGuardadas));
+                console.log('Portadas cargadas desde GitHub:', Object.keys(portadasGuardadas));
+            } catch (error) {
+                console.warn('No se pudieron cargar portadas desde GitHub:', error);
+            }
+        }
+
+        function imageExists(url) {
+            return true; // El navegador maneja el onerror
+        }
+
+        function actualizarSugerenciasBusqueda() {
+            const datalist = document.getElementById('sugerenciasBusqueda');
+            datalist.innerHTML = catalogo.map(libro => `
+                <option value="${libro.titulo}">${libro.autor} - ${libro.categoria} (${libro.copiasDisponibles} disponibles)</option>
+            `).join('');
+        }
+
+        function normalizarTexto(texto) {
+            if (!texto) return '';
+            const acentos = {
+                'á': 'a', 'é': 'e', 'í': 'i', 'ó': 'o', 'ú': 'u',
+                'Á': 'A', 'É': 'E', 'Í': 'I', 'Ó': 'O', 'Ú': 'U'
+            };
+            return texto
+                .replace(/[áéíóúÁÉÍÓÚ]/g, match => acentos[match] || match)
+                .toLowerCase()
+                .replace(/\s+/g, ' ')
+                .trim();
+        }
+
+        function buscarLibros(query, exactMatch = false) {
+            if (!catalogo.length || !query) {
+                return [];
+            }
+            const lowerQuery = normalizarTexto(query);
+            if (exactMatch) {
+                return catalogo.filter(libro => normalizarTexto(libro.titulo) === lowerQuery);
+            }
+            return catalogo
+                .filter(libro =>
+                    normalizarTexto(libro.titulo).includes(lowerQuery) ||
+                    normalizarTexto(libro.autor).includes(lowerQuery) ||
+                    normalizarTexto(libro.categoria).includes(lowerQuery) ||
+                    normalizarTexto(libro.signatura).includes(lowerQuery) ||
+                    normalizarTexto(libro.isbn).includes(lowerQuery)
+                )
+                .sort((a, b) => b.copiasDisponibles - a.copiasDisponibles);
+        }
+
+        function mostrarResultadosBusqueda() {
+            if (!catalogo.length) {
+                showToast('Catálogo en Mantenimiento, discupe las molestias.', 'warning');
+                return;
+            }
+            const query = document.getElementById('buscarInput').value.trim();
+            if (!query) {
+                showToast('Por favor, introduce un término de búsqueda.', 'warning');
+                return;
+            }
+            searchQuery = query;
+            searchResults = buscarLibros(query);
+            currentPageSearch = 1;
+            abrirModal();
+            mostrarResultadosModal();
+        }
+
+        function buscarEnModal() {
+            const query = document.getElementById('modalSearchInput').value.trim();
+            if (!query) {
+                showToast('Por favor, introduce un término de búsqueda.', 'warning');
+                return;
+            }
+            searchQuery = query;
+            searchResults = buscarLibros(query);
+            currentPageSearch = 1;
+            mostrarResultadosModal();
+        }
+
+        function abrirModal() {
+            const modal = document.getElementById('searchModal');
+            const modalSearchInput = document.getElementById('modalSearchInput');
+            modalSearchInput.value = searchQuery;
+            modal.style.display = 'block';
+            modalSearchInput.focus();
+            document.querySelector('.theme-controls').classList.add('active');
+        }
+
+        // Nueva función async para renderizar portadas de forma robusta
+        async function renderPortadas(container, idLibro) {
+            const libro = catalogo.find(l => l.idRegistro === idLibro);
+            if (!libro || !libro.portadas || libro.portadas.length === 0) {
+                container.classList.add('loaded');
+                return;
+            }
+
+            const slider = document.createElement('div');
+            slider.className = 'portada-slider';
+            container.appendChild(slider);
+
+            const loadImagePromises = libro.portadas.map((url, index) => 
+                new Promise((resolve) => {  // Sin race, solo onload/onerror
+                    const img = new Image();
+                    img.src = url;  // Precarga inmediata
+                    img.alt = '';
+                    img.className = 'portada-img';
+                    img.onload = () => resolve({ img, index, success: true });  // Use original img
+                    img.onerror = () => {
+                        // Eliminar URL rota del localStorage
+                        const saved = JSON.parse(localStorage.getItem('portadas_libros') || '{}');
+                        if (saved[idLibro]) {
+                            saved[idLibro] = saved[idLibro].filter(u => u !== url);
+                            localStorage.setItem('portadas_libros', JSON.stringify(saved));
+                        }
+                        resolve({ index, success: false });
+                    };
+                    // No timeout; deja que cargue (o user ve spinner)
+                })
+            );
+
+            const results = await Promise.all(loadImagePromises);
+            const validImages = results.filter(r => r.success && r.img).map(r => ({ img: r.img, index: r.index }));
+            const imgs = validImages.map(r => r.img); // For append
+
+            // Now render
+            if (validImages.length === 0) {
+                slider.remove(); // Eliminar slider si no hay imágenes válidas
+                container.classList.add('loaded');
+                return;
+            }
+
+            validImages.forEach((item, i) => {
+                item.img.style.display = 'block';
+                if (i === 0) item.img.classList.add('active');
+                slider.appendChild(item.img);
+            });
+
+            if (validImages.length >= 1) {
+    slider.classList.add('portada-slider-3d');
+
+    const angle = 360 / validImages.length;
+    validImages.forEach((item, i) => {
+        const img = item.img;
+        img.className = 'portada-img-3d';
+        if (i === 0) img.classList.add('active');
+        img.style.transform = `rotateY(${i * angle}deg) translateZ(80px)`;
+        slider.appendChild(img);
+    });
+
+    let current = 0;
+    const interval = setInterval(() => {
+        current = (current + 1) % validImages.length;
+        slider.style.transform = `rotateY(${-current * angle}deg)`;
+    }, 2500);
+
+    const observer = new MutationObserver(() => {
+        if (getComputedStyle(document.getElementById('searchModal')).display === 'none') {
+            clearInterval(interval);
+            observer.disconnect();
+        }
+    });
+    observer.observe(document.getElementById('searchModal'), { attributes: true });
+}
+
+            container.classList.add('loaded');
+        }
+
+        function mostrarResultadosModal() {
+            const pageSize = 5;
+            const totalPages = Math.ceil(searchResults.length / pageSize);
+            const start = (currentPageSearch - 1) * pageSize;
+            const end = start + pageSize;
+            const paginatedResults = searchResults.slice(start, end);
+            const isAdminLogged = localStorage.getItem('adminLogged') === 'true';
+
+            const resultadosDiv = document.getElementById('resultadosModal');
+            resultadosDiv.innerHTML = paginatedResults.map(libro => `
+                <div class="libro-modal" role="region" aria-label="Resultado de búsqueda para ${libro.titulo}">
+                    <div class="contenido-modal">
+                        <div class="portada-container" data-libro-id="${libro.idRegistro}"></div>
+                        <p><strong>Título:</strong> ${libro.titulo}</p>
+                        <p><strong>Autor:</strong> ${libro.autor}</p>
+                        <p><strong>Categoría:</strong> ${libro.categoria}</p>
+                        <p><strong>Tejuelo:</strong> <span class="tejuelo" data-categoria="${libro.categoria.toLowerCase()}">${libro.signatura}</span></p>
+                        <p><strong>Ejemplares Disponibles:</strong> ${libro.copiasDisponibles}</p>
+                        <button class="reserva-libro-btn" onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSeTUAdMIEZz0lP2qflcZgfIP2zhsU4sYJoQZYoJcmvUZRAQnw/viewform', '_blank')"
+                             aria-label="Reservar el libro ${libro.titulo}">Reservar Libro 📚</button>
+                        <button class="sinopsis-btn" onclick="mostrarSinopsis('${libro.idRegistro}', '${sanitizeHTML(libro.titulo)}', '${sanitizeHTML(libro.autor)}')"
+                                aria-label="Generar sinopsis para ${libro.titulo}">Generar Sinopsis 📝</button>
+                        <button class="add-cover-btn" onclick="abrirLoginAdmin('${libro.idRegistro}')"
+                            aria-label="Abrir formulario para subir portada para ${libro.titulo}">+</button>
+                        ${isAdminLogged && libro.portadas.length > 0 ? `
+                            <button class="delete-cover-btn" onclick="abrirEliminarPortada('${libro.idRegistro}')"
+                                aria-label="Eliminar portada para ${libro.titulo}">−</button>
+                        ` : ''}
+                        <div id="sinopsis-${libro.idRegistro}" style="display: none; margin-top: 10px;"></div>
+                    </div>
+                </div>
+            `).join('') || '<p>No se encontraron libros en esta página.</p>';
+
+            // === CARGA SEGURA DE PORTADAS (MODIFICADA CON LOOP AWAIT PARA EVITAR RACE) ===
+            setTimeout(async () => {
+                try {
+                    const containers = document.querySelectorAll('.portada-container');
+                    for (const container of containers) {
+                        const idLibro = container.dataset.libroId;
+                        await renderPortadas(container, idLibro);
+                    }
+                } catch (error) {
+                    console.error('Error rendering portadas:', error);
+                }
+            }, 100);
+        }
+
+        function changePageSearch(newPage) {
+            currentPageSearch = newPage;
+            mostrarResultadosModal();
+        }
+
+        async function probarModelo(modelo, contents) {
+            try {
+                const response = await fetch(`${BASE_URL}${modelo}:generateContent?key=${API_KEY}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contents })
+                });
+                if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
+                const data = await response.json();
+                if (data.error) throw new Error(data.error.message);
+                if (data.candidates && data.candidates.length > 0) {
+                    const contenido = data.candidates[0].content;
+                    if (contenido && contenido.parts && contenido.parts.length > 0) {
+                        localStorage.setItem('gemini_modelo_funcional', modelo);
+                        MODELO_FUNCIONAL = modelo;
+                        return contenido.parts.map(part => part.text).join(' ');
+                    }
+                }
+                return null;
+            } catch (error) {
+                console.error(`Error con el modelo ${modelo}:`, error);
+                return null;
+            }
+        }
+
+        async function generarSinopsis(titulo, autor, idRegistro) {
+            const cacheKey = `sinopsis_${normalizarTexto(titulo)}_${normalizarTexto(autor)}`;
+            if (cacheRespuestas[cacheKey]) {
+                return { texto: cacheRespuestas[cacheKey], mostrarReservaBtn: false, mostrarSolicitudBtn: false };
+            }
+
+            const systemPrompt = `Eres Hipat-IA, una bibliotecaria virtual del IES Carpe Diem. 
+Proporciona una sinopsis breve (100-200 palabras) del libro "${titulo}" de ${autor}. 
+Si no conoces el libro, genera una sinopsis creativa basada en el título y el contexto general. 
+Termina con una oración completa con punto. Usa un tono cálido y atractivo, con emojis.`;
+
+            const contents = [
+                { parts: [{ text: systemPrompt }], role: 'model' },
+                { parts: [{ text: `Dame la sinopsis de "${titulo}" de ${autor}.` }], role: 'user' }
+            ];
+
+            let respuesta = null;
+            if (!MODELO_FUNCIONAL || MODELO_FUNCIONAL === 'null') {
+                showToast('Buscando un modelo de Gemini funcional...', 'warning');
+                for (const modelo of MODELOS_A_PROBAR) {
+                    respuesta = await probarModelo(modelo, contents);
+                    if (respuesta) {
+                        showToast(`¡Modelo ${modelo} funciona! Usándose de ahora en adelante.`, 'success');
+                        break;
+                    }
+                }
+                if (!respuesta) {
+                    respuesta = 'No pude conectar con la API de Gemini, inténtalo más tarde.';
+                }
+            } else {
+                respuesta = await probarModelo(MODELO_FUNCIONAL, contents);
+                if (!respuesta) {
+                    console.warn(`Modelo guardado ${MODELO_FUNCIONAL} falló, buscando nuevo modelo...`);
+                    localStorage.removeItem('gemini_modelo_funcional');
+                    MODELO_FUNCIONAL = null;
+                    return generarSinopsis(titulo, autor, idRegistro);
+                }
+            }
+
+            cacheRespuestas[cacheKey] = respuesta;
+            localStorage.setItem('hipatia_cache', JSON.stringify(cacheRespuestas));
+            return { texto: respuesta, mostrarReservaBtn: false, mostrarSolicitudBtn: false };
+        }
+
+        async function mostrarSinopsis(idRegistro, titulo, autor) {
+            const sinopsisDiv = document.getElementById(`sinopsis-${idRegistro}`);
+            sinopsisDiv.innerHTML = '<p style="font-style: italic; color: var(--text-secondary);">Generando sinopsis...</p>';
+            sinopsisDiv.style.display = 'block';
+
+            const { texto, mostrarReservaBtn, mostrarSolicitudBtn } = await generarSinopsis(titulo, autor, idRegistro);
+            const mensajeId = mensajeActualId++;
+            const partes = dividirTexto(texto, 'sinopsis');
+            respuestasPendientes[mensajeId] = partes;
+
+            sinopsisDiv.innerHTML = marked.parse(sanitizeHTML(`**Sinopsis (Parte 1/${partes.length})**:\n${partes[0].texto}`));
+            
+            if (partes.length > 1) {
+                const proseguirBtn = document.createElement('button');
+                proseguirBtn.className = 'proseguir-btn';
+                proseguirBtn.textContent = 'Proseguir sinopsis';
+                proseguirBtn.setAttribute('aria-label', `Mostrar la parte 2 de ${partes.length} de la sinopsis de ${titulo}`);
+                proseguirBtn.onclick = () => mostrarSiguienteParteSinopsis(idRegistro, mensajeId, 2, partes);
+                sinopsisDiv.appendChild(proseguirBtn);
+            }
+        }
+
+        function mostrarSiguienteParteSinopsis(idRegistro, mensajeId, parteActual, partes) {
+            const sinopsisDiv = document.getElementById(`sinopsis-${idRegistro}`);
+            if (parteActual <= partes.length) {
+                sinopsisDiv.innerHTML = marked.parse(sanitizeHTML(`**Sinopsis (Parte ${parteActual}/${partes.length})**:\n${partes[parteActual - 1].texto}`));
+                if (parteActual < partes.length) {
+                    const proseguirBtn = document.createElement('button');
+                    proseguirBtn.className = 'proseguir-btn';
+                    proseguirBtn.textContent = 'Proseguir sinopsis';
+                    proseguirBtn.setAttribute('aria-label', `Mostrar la parte ${parteActual + 1} de ${partes.length} de la sinopsis`);
+                    proseguirBtn.onclick = () => mostrarSiguienteParteSinopsis(idRegistro, mensajeId, parteActual + 1, partes);
+                    sinopsisDiv.appendChild(proseguirBtn);
+                }
+            }
+        }
+
+        function extraerLibroDeConsulta(query) {
+            const lowerQuery = normalizarTexto(query);
+            const match = lowerQuery.match(/(?:de|sobre)\s+(.+)$/i);
+            if (match && match[1]) {
+                return match[1].trim();
+            }
+            return lowerQuery.replace(/(cuantos|ejemplares|copias|disponibles|libros)/gi, '').trim();
+        }
+
+        function abrirBuscadorLibro(libro) {
+            searchQuery = libro;
+            searchResults = buscarLibros(libro);
+            currentPageSearch = 1;
+            abrirModal();
+            mostrarResultadosModal();
+        }
+
+        function dividirTexto(texto, tipo) {
+            const maxLength = 500;
+            const partes = [];
+            let parteActual = '';
+            let contadorPalabras = 0;
+            const palabras = texto.split(' ');
+            for (const palabra of palabras) {
+                if (contadorPalabras + palabra.length > maxLength) {
+                    partes.push({ tipo, texto: parteActual.trim() });
+                    parteActual = palabra + ' ';
+                    contadorPalabras = palabra.length + 1;
+                } else {
+                    parteActual += palabra + ' ';
+                    contadorPalabras += palabra.length + 1;
+                }
+            }
+            if (parteActual.trim()) {
+                partes.push({ tipo, texto: parteActual.trim() });
+            }
+            return partes.length > 0 ? partes : [{ tipo, texto }];
+        }
+
+        function mostrarSiguienteParte(mensajeId, parteActual) {
+            const partes = respuestasPendientes[mensajeId];
+            if (partes && parteActual <= partes.length) {
+                const libroBuscado = partes[0].libroBuscado || null;
+                const mostrarReservaBtn = partes[0].texto.includes('[RESERVA]');
+                const mostrarSolicitudBtn = partes[0].texto.includes('[SOLICITUD]');
+                agregarMensaje('', false, false, partes, mensajeId, parteActual, partes.length, libroBuscado, mostrarReservaBtn, mostrarSolicitudBtn);
+            }
+        }
+
+        function agregarMensaje(texto, esUsuario = false, esTemporal = false, partes = null, mensajeId = null, parteActual = 1, totalPartes = 1, libroBuscado = null, mostrarReservaBtn = false, mostrarSolicitudBtn = false) {
+            const mensajes = Array.from(chatMensajes.getElementsByClassName('mensaje'));
+            if (mensajes.length > 50) {
+                mensajes[0].remove();
+            }
+            const mensajeDiv = document.createElement('div');
+            mensajeDiv.className = `mensaje ${esUsuario ? 'user' : 'bot'}${esTemporal ? ' temporal' : ''}`;
+            let mensajeTexto = esUsuario ? texto : texto;
+            if (!esUsuario && !esTemporal && partes) {
+                mensajeTexto = `**${partes[parteActual - 1].tipo.charAt(0).toUpperCase() + partes[parteActual - 1].tipo.slice(1)} (Parte ${parteActual}/${totalPartes})**:\n${partes[parteActual - 1].texto}`;
+            }
+            mensajeDiv.innerHTML = esUsuario ? sanitizeHTML(mensajeTexto) : marked.parse(sanitizeHTML(mensajeTexto));
+            if (!esUsuario && !esTemporal) {
+                if (partes && parteActual < totalPartes) {
+                    const proseguirBtn = document.createElement('button');
+                    proseguirBtn.className = 'proseguir-btn';
+                    proseguirBtn.textContent = 'Proseguir respuesta';
+                    proseguirBtn.setAttribute('aria-label', `Mostrar la parte ${parteActual + 1} de ${totalPartes} de la respuesta`);
+                    proseguirBtn.onclick = () => mostrarSiguienteParte(mensajeId, parteActual + 1);
+                    mensajeDiv.appendChild(proseguirBtn);
+                }
+                if (libroBuscado) {
+                    const buscarBtn = document.createElement('button');
+                    buscarBtn.className = 'buscar-libro-btn';
+                    buscarBtn.textContent = 'Abrir Catálogo 🔍';
+                    buscarBtn.setAttribute('aria-label', `Abrir ventana de búsqueda con resultados para ${libroBuscado}`);
+                    buscarBtn.onclick = () => abrirBuscadorLibro(libroBuscado);
+                    mensajeDiv.appendChild(buscarBtn);
+                }
+                if (mostrarReservaBtn) {
+                    const reservaBtn = document.createElement('button');
+                    reservaBtn.className = 'reserva-libro-btn';
+                    reservaBtn.textContent = 'Reserva de Libros 📚';
+                    reservaBtn.setAttribute('aria-label', `Abrir formulario de reserva de libros`);
+                    reservaBtn.onclick = () => window.open('https://docs.google.com/forms/d/e/1FAIpQLSeTUAdMIEZz0lP2qflcZgfIP2zhsU4sYJoQZYoJcmvUZRAQnw/viewform', '_blank');
+                    mensajeDiv.appendChild(reservaBtn);
+                }
+                if (mostrarSolicitudBtn) {
+                    const solicitudBtn = document.createElement('button');
+                    solicitudBtn.className = 'solicitud-libro-btn';
+                    solicitudBtn.textContent = 'Solicitud de Libros Nuevos 🗳️';
+                    solicitudBtn.setAttribute('aria-label', `Abrir formulario de solicitud de libros nuevos`);
+                    solicitudBtn.onclick = () => window.open('https://docs.google.com/forms/d/e/1FAIpQLSf_VH-Wmf7SC7geWNwoLhX1aqc_xy1LQ-fp-SFYdlOYIbTE-g/viewform', '_blank');
+                    mensajeDiv.appendChild(solicitudBtn);
+                }
+            }
+            chatMensajes.appendChild(mensajeDiv);
+            chatMensajes.scrollTop = chatMensajes.scrollHeight;
+            if (!esTemporal) {
+                historialMensajes.push({ role: esUsuario ? 'user' : 'assistant', content: texto });
+                if (historialMensajes.length > 6) {
+                    historialMensajes = historialMensajes.slice(-6);
+                }
+            }
+            return mensajeDiv;
+        }
+
+        function formatearResultados(resultados, libroBuscado) {
+            if (!resultados.length) {
+                return {
+                    texto: `Quizás haya algo de "${libroBuscado}" en el catálogo. Usa el botón **Solicitud de Libros Nuevos** para proponer el libro si no lo tenemos.`,
+                    mostrarSolicitudBtn: true,
+                    libroBuscado
+                };
+            }
+            const libro = resultados[0];
+            return {
+                texto: `Hay ${libro.copiasTotales} ejemplares totales de "${libro.titulo}", de los cuales ${libro.copiasDisponibles} están disponibles. Usa el botón **Reserva de Libros** para reservarlo. ¿Quieres abrir la ventana de búsqueda para ver más detalles?`,
+                mostrarReservaBtn: true,
+                libroBuscado
+            };
+        }
+
+        function generarRecomendacion(intencion) {
+            if (!catalogo.length) {
+                return {
+                    texto: 'El catálogo no está disponible ahora mismo. Usa el botón **Solicitud de Libros Nuevos** para proponer un libro. ¿Otro género?',
+                    libroBuscado: null,
+                    mostrarSolicitudBtn: true
+                };
+            }
+
+            let librosFiltrados = catalogo;
+            let descripcion = '';
+
+            if (intencion === 'recomendacion_fantasia') {
+                librosFiltrados = catalogo.filter(libro => normalizarTexto(libro.categoria) === 'narrativa');
+                descripcion = 'una emocionante obra de narrativa, ideal para amantes de la fantasía y la aventura.';
+            } else if (intencion === 'recomendacion_poesia') {
+                librosFiltrados = catalogo.filter(libro => normalizarTexto(libro.categoria) === 'poesia');
+                descripcion = 'un hermoso poemario que captura emociones profundas.';
+            } else if (intencion === 'recomendacion_narrativa') {
+                librosFiltrados = catalogo.filter(libro => normalizarTexto(libro.categoria) === 'narrativa');
+                descripcion = 'una novela cautivadora que te sumergirá en una gran historia.';
+            } else if (intencion === 'recomendacion_teatro') {
+                librosFiltrados = catalogo.filter(libro => normalizarTexto(libro.categoria) === 'teatro');
+                descripcion = 'una obra teatral fascinante, llena de diálogos y emociones.';
+            } else if (intencion === 'recomendacion_comic') {
+                librosFiltrados = catalogo.filter(libro => normalizarTexto(libro.categoria) === 'cómic');
+                descripcion = 'un cómic vibrante con historias visuales emocionantes.';
+            } else if (intencion === 'recomendacion_literatura_inglesa') {
+                librosFiltrados = catalogo.filter(libro => normalizarTexto(libro.categoria) === 'literatura inglesa');
+                descripcion = 'una obra en inglés que destaca por su riqueza literaria.';
+            } else if (intencion === 'recomendacion_deportes') {
+                librosFiltrados = catalogo.filter(libro => normalizarTexto(libro.categoria) === 'deportes');
+                descripcion = 'un libro apasionante sobre deportes, perfecto para entusiastas.';
+            } else {
+                const categorias = ['Narrativa', 'Poesía', 'Teatro', 'Literatura inglesa', 'Enciclopedias', 'Cómic', 'Deportes'];
+                const categoriaAleatoria = categorias[Math.floor(Math.random() * categorias.length)];
+                librosFiltrados = catalogo.filter(libro => normalizarTexto(libro.categoria) === normalizarTexto(categoriaAleatoria));
+                descripcion = `una obra destacada de ${categoriaAleatoria.toLowerCase()}, perfecta para explorar algo nuevo.`;
+            }
+
+            if (librosFiltrados.length === 0) {
+                return {
+                    texto: `No encontré libros en esa categoría en el catálogo. Usa el botón **Solicitud de Libros Nuevos** para proponer uno. ¿Otro tipo de libro?`,
+                    libroBuscado: null,
+                    mostrarSolicitudBtn: true
+                };
+            }
+
+            const libro = librosFiltrados[Math.floor(Math.random() * librosFiltrados.length)];
+            const texto = `Te recomiendo *${libro.titulo}* de ${libro.autor} (${libro.categoria}). Es ${descripcion} Hay ${libro.copiasTotales} ejemplares totales, de los cuales ${libro.copiasDisponibles} están disponibles. Usa el botón **Reserva de Libros** para reservarlo. ¿Quieres abrir la ventana de búsqueda para ver más detalles?`;
+
+            return {
+                texto,
+                libroBuscado: libro.titulo,
+                mostrarReservaBtn: true
+            };
+        }
+
+        function detectarIntencion(query) {
+            const lowerQuery = normalizarTexto(query);
+            if (lowerQuery.includes('cuantos') || lowerQuery.includes('ejemplares') || lowerQuery.includes('copias') || lowerQuery.includes('disponibles') || lowerQuery.includes('libros')) return 'ejemplares';
+            if (lowerQuery.includes('sinopsis')) return 'sinopsis';
+            if (lowerQuery.includes('resumen')) return 'resumen';
+            if (lowerQuery.includes('reseña') || lowerQuery.includes('critica') || lowerQuery.includes('opinion')) return 'reseña';
+            if (lowerQuery.includes('recomendaciones') || lowerQuery.includes('recomiendame') || lowerQuery.includes('recomiéndame') || lowerQuery.includes('sugerencias')) return 'recomendaciones';
+            if (lowerQuery.includes('fantasia') || lowerQuery.includes('aventura')) return 'recomendacion_fantasia';
+            if (lowerQuery.includes('poesia') || lowerQuery.includes('poema')) return 'recomendacion_poesia';
+            if (lowerQuery.includes('narrativa') || lowerQuery.includes('novela')) return 'recomendacion_narrativa';
+            if (lowerQuery.includes('teatro')) return 'recomendacion_teatro';
+            if (lowerQuery.includes('comic') || lowerQuery.includes('cómic')) return 'recomendacion_comic';
+            if (lowerQuery.includes('literatura inglesa') || lowerQuery.includes('libros en ingles') || lowerQuery.includes('libros en inglés')) return 'recomendacion_literatura_inglesa';
+            if (lowerQuery.includes('deportes')) return 'recomendacion_deportes';
+            if (lowerQuery.includes('reservar') || lowerQuery.includes('reserva')) return 'reservas';
+            if (lowerQuery.includes('solicitar') || lowerQuery.includes('proponer') || lowerQuery.includes('nuevo libro')) return 'solicitar';
+            return 'general';
+        }
+
+        async function consultarAPI(mensaje, intencion, contexto) {
+            const historialResumido = historialMensajes.length > 4 ?
+                `Resumen del historial: El usuario preguntó sobre ${historialMensajes.filter(m => m.role === 'user').map(m => m.content).join(', ')}. Continúa la conversación de forma natural.\n` :
+                historialMensajes.map(msg => `${msg.role === 'user' ? 'Usuario' : 'Hipat-IA'}: ${msg.content}`).join('\n');
+            const systemPrompt = `Eres Hipat-IA, una bibliotecaria virtual entusiasta del IES Carpe Diem. 
+Respondes en español con un tono cálido, dinámico y profesional, como una amiga conocedora de libros. Nunca repitas "Hola, soy Hipat-IA". Usa el catálogo y el historial para respuestas relevantes y naturales.
+
+**Contexto del catálogo**:
+${contexto}
+
+**Historial de la conversación**:
+${historialResumido}
+
+**Instrucciones**:
+- **Sinopsis**: Da un resumen breve de 100-200 palabras, usando el catálogo si está disponible o conocimiento general. Termina en una oración completa con punto.
+- **Resumen**: Da un resumen breve de 100-200 palabras, estructurado para ser claro y conciso, usando el catálogo si está disponible o conocimiento general. Termina en una oración completa con punto.
+- **Reseña**: Ofrece una opinión crítica de 100-200 palabras, destacando importancia y características. Termina en una oración completa con punto.
+- **General**: Responde en 100-200 palabras con información relevante, clara y completa. Termina en una oración completa con punto.
+- **Reservas**: Indica que se puede reservar un libro usando el botón **Reserva de Libros**. Incluye una señal [RESERVA] al final de la respuesta.
+- **Solicitar un libro**: Indica que se puede proponer un nuevo libro usando el botón **Solicitud de Libros Nuevos**. Incluye una señal [SOLICITUD] al final de la respuesta.
+- Usa emojis (📖, ✨) para un toque amigable.
+- Termina con una pregunta breve, como "¿Otro libro?" o "¿Más detalles?".
+`;
+            const contents = [
+                { parts: [{ text: systemPrompt }], role: 'model' },
+                ...historialMensajes.map(msg => ({
+                    parts: [{ text: msg.content }],
+                    role: msg.role === 'user' ? 'user' : 'model'
+                })),
+                { parts: [{ text: mensaje }], role: 'user' }
+            ];
+            let respuesta = null;
+            if (!MODELO_FUNCIONAL || MODELO_FUNCIONAL === 'null') {
+                showToast('Buscando un modelo de Gemini funcional...', 'warning');
+                for (const modelo of MODELOS_A_PROBAR) {
+                    respuesta = await probarModelo(modelo, contents);
+                    if (respuesta) {
+                        showToast(`¡Modelo ${modelo} funciona! Usándose de ahora en adelante.`, 'success');
+                        break;
+                    }
+                }
+                if (!respuesta) {
+                    respuesta = intencion === 'sinopsis' ? 'No pude conectar, inténtalo más tarde.' :
+                            intencion === 'resumen' ? 'No pude conectar, inténtalo más tarde.' :
+                            intencion === 'reseña' ? 'No pude conectar, inténtalo más tarde.' :
+                            'No pude conectar, inténtalo más tarde.';
+                }
+            } else {
+                respuesta = await probarModelo(MODELO_FUNCIONAL, contents);
+                if (!respuesta) {
+                    console.warn(`Modelo guardado ${MODELO_FUNCIONAL} falló, buscando nuevo modelo...`);
+                    localStorage.removeItem('gemini_modelo_funcional');
+                    MODELO_FUNCIONAL = null;
+                    return consultarAPI(mensaje, intencion, contexto);
+                }
+            }
+            return {
+                texto: respuesta,
+                mostrarReservaBtn: respuesta.includes('[RESERVA]'),
+                mostrarSolicitudBtn: respuesta.includes('[SOLICITUD]')
+            };
+        }
+
+        async function enviarMensaje() {
+            if (!catalogo.length) {
+                showToast('El catálogo aún está cargando. Intenta de nuevo en un momento.', 'warning');
+                return;
+            }
+            const mensaje = sanitizeHTML(document.getElementById('chatInput').value.trim());
+            if (!mensaje) {
+                showToast('Por favor, escribe un mensaje.', 'warning');
+                return;
+            }
+            agregarMensaje(mensaje, true);
+            document.getElementById('chatInput').value = '';
+            const escribiendoDiv = agregarMensaje('Hipat-IA está buscando en la estantería...', false, true);
+            const intencion = detectarIntencion(mensaje);
+            const cacheKey = `${intencion}_${normalizarTexto(mensaje)}`;
+            const mensajeId = mensajeActualId++;
+
+            if (intencion === 'ejemplares') {
+                const libroBuscado = extraerLibroDeConsulta(mensaje);
+                if (!libroBuscado) {
+                    escribiendoDiv.remove();
+                    const respuesta = 'No entendí el título del libro. ¿Puedes especificarlo, por ejemplo, "cuántos ejemplares hay de La Colmena"?';
+                    agregarMensaje(respuesta);
+                    return;
+                }
+                const resultados = buscarLibros(libroBuscado, true);
+                escribiendoDiv.remove();
+                const { texto, mostrarReservaBtn, mostrarSolicitudBtn, libroBuscado: libro } = formatearResultados(resultados, libroBuscado);
+                const partes = dividirTexto(texto, 'respuesta');
+                respuestasPendientes[mensajeId] = partes;
+                agregarMensaje('', false, false, partes, mensajeId, 1, partes.length, libro, mostrarReservaBtn, mostrarSolicitudBtn);
+                cacheRespuestas[cacheKey] = texto;
+                localStorage.setItem('hipatia_cache', JSON.stringify(cacheRespuestas));
+                return;
+            }
+
+            if (['recomendaciones', 'recomendacion_fantasia', 'recomendacion_poesia', 'recomendacion_narrativa', 'recomendacion_teatro', 'recomendacion_comic', 'recomendacion_literatura_inglesa', 'recomendacion_deportes'].includes(intencion)) {
+                escribiendoDiv.remove();
+                const { texto, libroBuscado, mostrarReservaBtn, mostrarSolicitudBtn } = generarRecomendacion(intencion);
+                const partes = dividirTexto(texto, 'recomendacion');
+                respuestasPendientes[mensajeId] = partes;
+                agregarMensaje('', false, false, partes, mensajeId, 1, partes.length, libroBuscado, mostrarReservaBtn, mostrarSolicitudBtn);
+                cacheRespuestas[cacheKey] = texto;
+                localStorage.setItem('hipatia_cache', JSON.stringify(cacheRespuestas));
+                return;
+            }
+
+            if (intencion === 'reservas') {
+                escribiendoDiv.remove();
+                const texto = `Puedes reservar un libro usando el botón **Reserva de Libros**. ¿Quieres buscar un libro específico?`;
+                const partes = dividirTexto(texto, 'respuesta');
+                respuestasPendientes[mensajeId] = partes;
+                agregarMensaje('', false, false, partes, mensajeId, 1, partes.length, null, true, false);
+                cacheRespuestas[cacheKey] = texto;
+                localStorage.setItem('hipatia_cache', JSON.stringify(cacheRespuestas));
+                return;
+            }
+
+            if (intencion === 'solicitar') {
+                escribiendoDiv.remove();
+                const texto = `Puedes proponer un libro nuevo usando el botón **Solicitud de Libros Nuevos**. ¿Qué libro te gustaría sugerir?`;
+                const partes = dividirTexto(texto, 'respuesta');
+                respuestasPendientes[mensajeId] = partes;
+                agregarMensaje('', false, false, partes, mensajeId, 1, partes.length, null, false, true);
+                cacheRespuestas[cacheKey] = texto;
+                localStorage.setItem('hipatia_cache', JSON.stringify(cacheRespuestas));
+                return;
+            }
+
+            if (cacheRespuestas[cacheKey]) {
+                escribiendoDiv.remove();
+                const partes = dividirTexto(cacheRespuestas[cacheKey], intencion);
+                respuestasPendientes[mensajeId] = partes;
+                agregarMensaje('', false, false, partes, mensajeId, 1, partes.length, null, cacheRespuestas[cacheKey].includes('[RESERVA]'), cacheRespuestas[cacheKey].includes('[SOLICITUD]'));
+                return;
+            }
+
+            const resultadosCatalogo = buscarLibros(mensaje);
+            let contexto = '';
+            if (resultadosCatalogo.length > 0) {
+                contexto = `Resultados del catálogo de la Biblioteca Hipatia:\n${resultadosCatalogo.map((libro, index) => `
+                    - **Título**: ${libro.titulo}  
+                    **Autor**: ${libro.autor}  
+                    **Categoría**: ${libro.categoria}  
+                    **Tejuelo**: ${libro.signatura}  
+                    **Ejemplares totales**: ${libro.copiasTotales}  
+                    **Disponibles**: ${libro.copiasDisponibles}
+                `).join('\n')}\n\n`;
+            } else if (!catalogo.length) {
+                contexto = 'El catálogo no está disponible, pero puedo ofrecer sinopsis o recomendaciones generales. Usa el botón **Solicitud de Libros Nuevos** para proponer un libro.\n\n';
+            }
+            const { texto, mostrarReservaBtn, mostrarSolicitudBtn } = await consultarAPI(mensaje, intencion, contexto);
+            escribiendoDiv.remove();
+            const partes = dividirTexto(texto, intencion);
+            respuestasPendientes[mensajeId] = partes;
+            agregarMensaje('', false, false, partes, mensajeId, 1, partes.length, null, mostrarReservaBtn, mostrarSolicitudBtn);
+            cacheRespuestas[cacheKey] = texto;
+            localStorage.setItem('hipatia_cache', JSON.stringify(cacheRespuestas));
+        }
+
+        // === FUNCIONES DE ADMIN ===
+        function abrirLoginAdmin(idLibro) {
+            const isAdminLogged = localStorage.getItem('adminLogged') === 'true';
+            const loginTime = localStorage.getItem('adminLoginTime');
+            const LOGIN_DURATION = 24 * 60 * 60 * 1000;
+
+            if (isAdminLogged && loginTime && (Date.now() - parseInt(loginTime) < LOGIN_DURATION)) {
+                mostrarFormularioSubida(idLibro);
+                return;
+            }
+
+            localStorage.removeItem('adminLogged');
+            localStorage.removeItem('adminLoginTime');
+            localStorage.removeItem('githubToken');
+
+            const container = document.querySelector(`[data-libro-id="${idLibro}"]`);
+            if (!container) return;
+
+            let loginContainer = container.querySelector('.admin-login-container');
+            if (!loginContainer) {
+                loginContainer = document.createElement('div');
+                loginContainer.className = 'admin-login-container';
+                loginContainer.innerHTML = `
+                    <p><strong>Login de Administrador</strong></p>
+                    <input type="text" id="admin-user-${idLibro}" placeholder="Usuario" autocomplete="username">
+                    <input type="password" id="admin-pass-${idLibro}" placeholder="Contraseña" autocomplete="current-password">
+                    <input type="text" id="github-token-${idLibro}" placeholder="GitHub Token" autocomplete="off">
+                    <button onclick="validarAdmin('${idLibro}')">Iniciar sesión</button>
+                    <button onclick="cerrarLoginAdmin('${idLibro}')" style="background:#666; margin-left:5px;">Cancelar</button>
+                `;
+                container.appendChild(loginContainer);
+            }
+            loginContainer.classList.add('active');
+        }
+
+        function cerrarLoginAdmin(idLibro) {
+            const loginContainer = document.querySelector(`#admin-user-${idLibro}`)?.parentElement;
+            if (loginContainer) loginContainer.classList.remove('active');
+        }
+
+        function validarAdmin(idLibro) {
+            const user = document.getElementById(`admin-user-${idLibro}`).value.trim();
+            const pass = document.getElementById(`admin-pass-${idLibro}`).value;
+            const githubToken = document.getElementById(`github-token-${idLibro}`).value.trim();
+
+            if (user === ADMIN_USER && pass === ADMIN_PASS && githubToken) {
+                cerrarLoginAdmin(idLibro);
+                localStorage.setItem('adminLogged', 'true');
+                localStorage.setItem('adminLoginTime', Date.now());
+                localStorage.setItem('githubToken', githubToken);
+                mostrarFormularioSubida(idLibro);
+                showToast('Login correcto. Sube la portada.', 'success');
+                setTimeout(() => mostrarResultadosModal(), 500);
+            } else {
+                showToast('Credenciales incorrectas o token faltante.', 'error');
+            }
+        }
+
+        function mostrarFormularioSubida(idLibro) {
+            const container = document.querySelector(`[data-libro-id="${idLibro}"]`);
+            let uploadContainer = container.querySelector('.upload-cover-container');
+            if (!uploadContainer) {
+                uploadContainer = document.createElement('div');
+                uploadContainer.className = 'upload-cover-container';
+                uploadContainer.innerHTML = `
+                    <p><strong>Subir portada para:</strong> <em>${catalogo.find(l => l.idRegistro === idLibro)?.titulo || 'Libro'}</em></p>
+                    <input type="file" id="cover-file-${idLibro}" accept="image/*">
+                    <button onclick="subirPortada('${idLibro}')">Subir portada</button>
+                    <button onclick="cerrarSubida('${idLibro}')" style="background:#666; margin-left:5px;">Cancelar</button>
+                    <p id="upload-status-${idLibro}" style="margin-top:8px; font-size:0.9em;"></p>
+                `;
+                container.appendChild(uploadContainer);
+            }
+            uploadContainer.classList.add('active');
+        }
+
+        function cerrarSubida(idLibro) {
+            const uploadContainer = document.querySelector(`#cover-file-${idLibro}`)?.parentElement;
+            if (uploadContainer) uploadContainer.classList.remove('active');
+        }
+
+        async function subirPortada(idLibro) {
+            const token = localStorage.getItem('githubToken');
+            if (!token) {
+                showToast('Token de GitHub no encontrado. Inicia sesión nuevamente.', 'error');
+                return;
+            }
+
+            const fileInput = document.getElementById(`cover-file-${idLibro}`);
+            const status = document.getElementById(`upload-status-${idLibro}`);
+            if (!fileInput.files[0]) {
+                status.textContent = 'Selecciona una imagen.';
+                status.style.color = 'red';
+                return;
+            }
+
+            const file = fileInput.files[0];
+            if (!file.type.startsWith('image/')) {
+                status.textContent = 'Archivo no es una imagen válida.';
+                status.style.color = 'red';
+                return;
+            }
+
+            status.textContent = 'Procesando y subiendo a GitHub...';
+            status.style.color = 'blue';
+
+            try {
+                const base64Content = await new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                        const img = new Image();
+                        img.onload = () => {
+                            const canvas = document.createElement('canvas');
+                            const ctx = canvas.getContext('2d');
+                            canvas.width = 300;
+                            canvas.height = 450;
+                            ctx.drawImage(img, 0, 0, 300, 450);
+                            resolve(canvas.toDataURL('image/jpeg', 0.8).split(',')[1]);
+                        };
+                        img.src = reader.result;
+                    };
+                    reader.onerror = reject;
+                    reader.readAsDataURL(file);
+                });
+
+                const fileName = `${idLibro}_${Date.now()}.jpg`;
+                const uploadUrl = `${GITHUB_API_URL}${fileName}`;
+
+                const response = await fetch(uploadUrl, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `token ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: `Subir portada para libro ${idLibro} - ${file.name}`,
+                        content: base64Content
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(`Error GitHub: ${response.status} - ${errorData.message || 'Desconocido'}`);
+                }
+
+                const publicUrl = `https://raw.githubusercontent.com/IES-Carpe-Diem/Biblioteca-Hipatia/main/portadas/${fileName}`;
+
+                const libro = catalogo.find(l => l.idRegistro === idLibro);
+                if (libro) {
+                    if (!libro.portadas) libro.portadas = [];
+                    if (!libro.portadas.includes(publicUrl)) {
+                        libro.portadas.push(publicUrl);
+                    }
+                }
+
+                // === NUEVO: Guardar en localStorage para persistencia local ===
+                const portadasGuardadas = JSON.parse(localStorage.getItem('portadas_libros') || '{}');
+                if (!portadasGuardadas[idLibro]) portadasGuardadas[idLibro] = [];
+                if (!portadasGuardadas[idLibro].includes(publicUrl)) {
+                    portadasGuardadas[idLibro].push(publicUrl);
+                }
+                localStorage.setItem('portadas_libros', JSON.stringify(portadasGuardadas));
+
+                status.textContent = '¡Portada subida exitosamente a GitHub!';
+                status.style.color = 'green';
+                showToast(`Portada de "${libro?.titulo || 'el libro'}" ahora disponible globalmente.`, 'success');
+
+                setTimeout(() => mostrarResultadosModal(), 1000);
+
+            } catch (error) {
+                console.error('Error en subida:', error);
+                status.textContent = `Error: ${error.message}. Verifica el token de GitHub.`;
+                status.style.color = 'red';
+                showToast('Fallo en la subida. Revisa la consola para detalles.', 'error');
+            }
+        }
+
+        function abrirEliminarPortada(idLibro) {
+            const container = document.querySelector(`[data-libro-id="${idLibro}"]`);
+            if (!container) return;
+
+            let deleteContainer = container.querySelector('.delete-cover-container');
+            if (!deleteContainer) {
+                deleteContainer = document.createElement('div');
+                deleteContainer.className = 'delete-cover-container';
+                const libro = catalogo.find(l => l.idRegistro === idLibro);
+                const portadas = libro ? libro.portadas : [];
+                deleteContainer.innerHTML = `
+                    <p><strong>Seleccionar portada a eliminar:</strong> <em>${libro?.titulo || 'Libro'}</em></p>
+                    <select id="delete-cover-select-${idLibro}">
+                        ${portadas.map((portada, index) => `
+                            <option value="${portada}" data-index="${index}">Portada ${index + 1}</option>
+                        `).join('')}
+                    </select>
+                    <button onclick="eliminarPortada('${idLibro}')" style="background:#dc3545;">Eliminar Portada</button>
+                    <button onclick="cerrarEliminarPortada('${idLibro}')" style="background:#666; margin-left:5px;">Cancelar</button>
+                    <p id="delete-status-${idLibro}" style="margin-top:8px; font-size:0.9em;"></p>
+                `;
+                container.appendChild(deleteContainer);
+            }
+            deleteContainer.classList.add('active');
+        }
+
+        function cerrarEliminarPortada(idLibro) {
+            const deleteContainer = document.querySelector(`#delete-cover-select-${idLibro}`)?.parentElement;
+            if (deleteContainer) deleteContainer.classList.remove('active');
+        }
+
+        async function eliminarPortada(idLibro) {
+            const token = localStorage.getItem('githubToken');
+            if (!token) {
+                showToast('Token de GitHub no encontrado. Inicia sesión nuevamente.', 'error');
+                return;
+            }
+
+            const select = document.getElementById(`delete-cover-select-${idLibro}`);
+            const status = document.getElementById(`delete-status-${idLibro}`);
+            const portadaUrl = select.value;
+            if (!portadaUrl) {
+                status.textContent = 'Selecciona una portada para eliminar.';
+                status.style.color = 'red';
+                return;
+            }
+
+            status.textContent = 'Eliminando portada...';
+            status.style.color = 'blue';
+
+            try {
+                const fileName = portadaUrl.split('/').pop();
+                const deleteUrl = `${GITHUB_API_URL}${fileName}`;
+
+                const getResponse = await fetch(deleteUrl, {
+                    headers: {
+                        'Authorization': `token ${token}`,
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
+                });
+                if (!getResponse.ok) throw new Error('No se encontró el archivo en GitHub.');
+                const fileData = await getResponse.json();
+                const sha = fileData.sha;
+
+                const deleteResponse = await fetch(deleteUrl, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `token ${token}`,
+                        'Accept': 'application/vnd.github.v3+json'
+                    },
+                    body: JSON.stringify({
+                        message: `Eliminar portada para libro ${idLibro}`,
+                        sha
+                    })
+                });
+
+                if (!deleteResponse.ok) {
+                    const errorData = await deleteResponse.json();
+                    throw new Error(`Error GitHub: ${deleteResponse.status} - ${errorData.message || 'Desconocido'}`);
+                }
+
+                const libro = catalogo.find(l => l.idRegistro === idLibro);
+                if (libro) {
+                    libro.portadas = libro.portadas.filter(p => p !== portadaUrl);
+                    const portadasGuardadas = JSON.parse(localStorage.getItem('portadas_libros') || '{}');
+                    portadasGuardadas[idLibro] = libro.portadas;
+                    localStorage.setItem('portadas_libros', JSON.stringify(portadasGuardadas));
+                }
+
+                status.textContent = '¡Portada eliminada exitosamente!';
+                status.style.color = 'green';
+                showToast(`Portada eliminada de "${libro?.titulo || 'el libro'}".`, 'success');
+
+                setTimeout(() => {
+                    cerrarEliminarPortada(idLibro);
+                    mostrarResultadosModal();
+                }, 1000);
+
+            } catch (error) {
+                console.error('Error al eliminar:', error);
+                status.textContent = `Error: ${error.message}`;
+                status.style.color = 'red';
+                showToast('Fallo al eliminar la portada. Revisa la consola.', 'error');
+            }
+        }
+
+        function logoutAdmin() {
+            localStorage.removeItem('adminLogged');
+            localStorage.removeItem('adminLoginTime');
+            localStorage.removeItem('githubToken');
+            showToast('Sesión de administrador cerrada.', 'success');
+            document.querySelector('.logout-btn').style.display = 'none';
+            setTimeout(() => mostrarResultadosModal(), 500);
+        }
+
+        async function initApp() {
+            const MIN_SPLASH_DURATION = 2000;
+            const startTime = Date.now();
+
+            loadTheme();
+            loadDaltonismMode();
+
+            try {
+                await cargarCatalogo();
+                await cargarPortadasDesdeGitHub();
+            } catch (error) {
+                console.error('Error en initApp:', error);
+                showToast('Error al cargar la aplicación.', 'error');
+            }
+
+            const elapsedTime = Date.now() - startTime;
+            const remainingTime = MIN_SPLASH_DURATION - elapsedTime;
+            if (remainingTime > 0) {
+                await new Promise(resolve => setTimeout(resolve, remainingTime));
+            }
+
+            const splash = document.getElementById('splash');
+            splash.classList.add('hidden');
+            document.getElementById('app').style.display = 'block';
+            document.getElementById('seccionDerecha').style.display = 'block';
+            setTimeout(() => splash.remove(), 500);
+
+            const isAdminLogged = localStorage.getItem('adminLogged') === 'true';
+            const loginTime = localStorage.getItem('adminLoginTime');
+            const LOGIN_DURATION = 24 * 60 * 60 * 1000;
+            if (isAdminLogged && loginTime && (Date.now() - parseInt(loginTime) < LOGIN_DURATION)) {
+                document.querySelector('.logout-btn').style.display = 'inline-block';
+            } else {
+                localStorage.removeItem('adminLogged');
+                localStorage.removeItem('adminLoginTime');
+                localStorage.removeItem('githubToken');
+            }
+
+            // Limpiar portadas huérfanas (opcional)
+            const portadasGuardadas = JSON.parse(localStorage.getItem('portadas_libros') || '{}');
+            Object.keys(portadasGuardadas).forEach(id => {
+                if (!catalogo.find(l => l.idRegistro === id)) {
+                    delete portadasGuardadas[id];
+                }
+            });
+            localStorage.setItem('portadas_libros', JSON.stringify(portadasGuardadas));
+
+            agregarMensaje('Libros, autores, sinopsis, resúmenes... Mi magia es poderosa, pregunta. 📖');
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && document.getElementById('searchModal').style.display === 'block') {
+                    cerrarModal();
+                }
+            });
+        }
+
+        initApp();
+        </script>
+</body>
+</html>
