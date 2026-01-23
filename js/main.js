@@ -366,18 +366,3 @@ async function initApp() {
     window.addEventListener('beforeunload', detenerRotativas);
 }
 
-// ------------------- Inicio -------------------
-
-initApp();
-
-// Backup splash timeout por si algo se congela
-setTimeout(() => {
-    const splash = document.getElementById('splash');
-    const app = document.getElementById('app');
-    if(splash && app) {
-        splash.classList.add('hidden');
-        app.style.display = 'block';
-        setTimeout(() => splash.remove(), 500);
-        console.log('Splash forzado a ocultar por timeout');
-    }
-}, 5000);
