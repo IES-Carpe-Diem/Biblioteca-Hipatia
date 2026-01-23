@@ -1,0 +1,35 @@
+html {
+    font-size: var(--font-size);
+    transition: font-size 0.3s ease, filter 0.3s;
+    filter: saturate(var(--contrast)) brightness(var(--brightness));
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 1.25rem;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    transition: background-color 0.3s, color 0.3s, font-size 0.3s, letter-spacing 0.3s;
+    font-size: 1rem;
+    letter-spacing: var(--letter-spacing);
+}
+
+button, input, select, textarea {
+    font-size: var(--button-size);
+    padding: calc(var(--button-size) * 0.5);
+    letter-spacing: var(--letter-spacing);
+}
+
+/* Visually hidden (para screen readers) */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+    white-space: nowrap;
+}

@@ -1,0 +1,101 @@
+/* Splash */
+#splash {
+    position: fixed;
+    inset: 0;
+    background: var(--splash-bg);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: opacity 0.5s ease-out;
+    color: var(--splash-text);
+    font-family: 'Arial', sans-serif;
+    text-align: center;
+    overflow: hidden;
+    text-shadow: var(--splash-shadow);
+}
+
+#splash.hidden { opacity: 0; pointer-events: none; }
+
+.splash-container { animation: fadeInContainer 1.5s ease-out; }
+
+#splash img {
+    max-width: 250px;
+    height: auto;
+    margin-bottom: 20px;
+    border-radius: 12px;
+    animation: bounceIn 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.5s both;
+    transition: transform 0.3s ease;
+}
+
+#splash img:hover,
+#splash img:focus { transform: scale(1.05); }
+
+#splash h2 {
+    font-size: 2.8rem;
+    margin: 15px 0;
+    font-weight: bold;
+    animation: fadeInUp 0.8s ease-out 1s both;
+    letter-spacing: 1px;
+}
+
+#splash p {
+    font-size: 1.3rem;
+    opacity: 0.95;
+    margin-bottom: 20px;
+    animation: fadeInUp 0.8s ease-out 1.2s both;
+}
+
+#app { display: none; }
+
+/* Header */
+header {
+    text-align: center;
+    background-image: url('https://site.educa.madrid.org/ies.carpediem.fuenlabrada//wp-content/uploads/ies.carpediem.fuenlabrada/2024/03/carpediem-foto-inicio1920x1200c.jpg');
+    background-size: cover;
+    background-position: center;
+    color: white;
+    padding: 20px;
+    border-radius: 8px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    position: relative;
+}
+
+.theme-controls {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    gap: 5px;
+    z-index: 1100;
+}
+
+/* Main layout */
+main {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+section {
+    flex: 1;
+    background: var(--bg-secondary);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    min-width: 250px;
+}
+
+#chatSection { flex: 2; min-width: 300px; }
+
+/* Responsive */
+@media (max-width: 768px) {
+    main { flex-direction: column; }
+    #chatSection { order: 3; }
+    #seccionIzquierda, #seccionDerecha { order: 1; }
+    #splash h2 { font-size: 2rem; }
+    #splash p { font-size: 1.1rem; }
+    #splash img { max-width: 180px; }
+    .theme-controls { flex-direction: column; gap: 2px; }
+}
