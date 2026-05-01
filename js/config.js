@@ -10,7 +10,7 @@ const CONFIG = {
     DEBOUNCE_DELAY: 300,
     ADMIN_USER: "admin",
     ADMIN_PASS: "hipatia2025",
-    API_KEY: 'AIzaSyAAv3JFgN_KKxBfA3_6fU69dVuHIxagsIc',
+    API_KEY: 'AIzaSyAqP_J-Z7fp8hhB4b8iNxHQdbQzKmHmRTw',
     BASE_URL: 'https://generativelanguage.googleapis.com/v1beta/models/',
     MODELOS_A_PROBAR: [
         'gemini-2.5-flash',
